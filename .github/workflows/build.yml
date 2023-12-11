@@ -27,7 +27,6 @@ jobs:
         run: yarn build
 
       - name: Upload production-ready build files
-        if:
         uses: actions/upload-artifact@v2
         with:
           name: production-files
