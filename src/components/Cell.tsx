@@ -1,18 +1,27 @@
 import { Group, Rect } from "react-konva";
-import { Connection, connectionToValues } from "../engine/ConnectionEnum";
+import { Tile } from "../generation/cell/Tile";
+import { hasAtLeastOneOpening } from "../generation/cell/TileManipulation";
 
 interface CellProps {
 	x: number;
 	y: number;
 	size: number;
-	connection: Connection;
+	cell: Tile | null;
 }
 
-export const Cell = ({ x, y, size, connection }: CellProps) => {
-	const wallSize = size * 0.3;
-	const walkSize = size * 0.4;
+const corridorWidth = 0.5;
+const wallWidth = 0.25;
 
-	const list = connectionToValues(connection);
+export const Cell = ({ x, y, size, cell }: CellProps) => {
+	if (cell === null) {
+		return <></>;
+	}
+
+	const northPath = getPath(cell.north);
+	const eastPath = getPath(cell.east);
+	const southPath = getPath(cell.south);
+	const westPath = getPath(cell.west);
+
 	return (
 		<Group
 			x={x}
@@ -23,54 +32,68 @@ export const Cell = ({ x, y, size, connection }: CellProps) => {
 				height={size}
 				x={0}
 				y={0}
-				fill={"#000000"}
+				fill={"black"}
 			/>
-
-			{list.length !== 0 && (
+			{hasAtLeastOneOpening(cell) && (
 				<Rect
-					width={walkSize}
-					height={walkSize}
-					x={wallSize}
-					y={wallSize}
-					fill={"#ffffff"}
+					width={size * corridorWidth}
+					height={size * corridorWidth}
+					x={size * wallWidth}
+					y={size * wallWidth}
+					fill={"white"}
 				/>
 			)}
-			{list.includes(Connection.North) && (
+			{cell.north > 0 && (
 				<Rect
-					width={walkSize}
-					height={walkSize}
-					x={wallSize}
+					width={size * northPath.width}
+					height={size * northPath.height}
+					x={size * wallWidth}
 					y={0}
-					fill={"#ffffff"}
+					fill={"white"}
 				/>
 			)}
-			{list.includes(Connection.South) && (
+			{cell.east > 0 && (
 				<Rect
-					width={walkSize}
-					height={walkSize}
-					x={wallSize}
-					y={size - wallSize}
-					fill={"#ffffff"}
+					width={size * eastPath.height}
+					height={size * eastPath.width}
+					x={size - size * wallWidth}
+					y={size * wallWidth}
+					fill={"white"}
 				/>
 			)}
-			{list.includes(Connection.East) && (
+			{cell.west > 0 && (
 				<Rect
-					width={walkSize}
-					height={walkSize}
-					x={size - wallSize}
-					y={wallSize}
-					fill={"#ffffff"}
-				/>
-			)}
-			{list.includes(Connection.West) && (
-				<Rect
-					width={walkSize}
-					height={walkSize}
+					width={size * westPath.height}
+					height={size * westPath.width}
 					x={0}
-					y={wallSize}
-					fill={"#ffffff"}
+					y={size * wallWidth}
+					fill={"white"}
+				/>
+			)}
+			{cell.south > 0 && (
+				<Rect
+					width={size * southPath.width}
+					height={size * southPath.height}
+					x={size * wallWidth}
+					y={size - size * wallWidth}
+					fill={"white"}
 				/>
 			)}
 		</Group>
 	);
 };
+
+function getPath(path: number) {
+	switch (path) {
+		case 1:
+			return {
+				width: corridorWidth,
+				height: wallWidth,
+			};
+		default:
+			return {
+				width: 0,
+				height: 0,
+			};
+	}
+}
