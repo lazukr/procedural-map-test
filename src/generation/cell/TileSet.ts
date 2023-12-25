@@ -44,10 +44,11 @@ export const ISOLATE_TILE: Tile = {
 } as const;
 
 export const TILE_SET = [
-	...generateAllUniqueRotations(CROSS_TILE),
-	...generateAllUniqueRotations(T_SHAPE_TILE),
-	...generateAllUniqueRotations(CORNER_TILE),
-	...generateAllUniqueRotations(LINE_TILE),
-	...generateAllUniqueRotations(ONE_WAY_TILE),
-	ISOLATE_TILE,
-] as const;
+	generateAllUniqueRotations(CROSS_TILE),
+	generateAllUniqueRotations(T_SHAPE_TILE),
+	[
+		...generateAllUniqueRotations(CORNER_TILE),
+		...generateAllUniqueRotations(LINE_TILE),
+	],
+	generateAllUniqueRotations(ONE_WAY_TILE),
+] as readonly Tile[][];
