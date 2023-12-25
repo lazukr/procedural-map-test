@@ -5,28 +5,43 @@ import { StageMap } from "./StageMap";
 
 export class StageMapGenerator {
 	private stage: StageMap;
-	private readonly tileSet: readonly Tile[];
+	private readonly tileSet: readonly Tile[][];
 	private readonly randomFunc: () => number;
+	private readonly probabilityVector: number[];
 
 	constructor(
 		stage: StageMap,
-		tileSet: readonly Tile[],
+		tileSet: readonly Tile[][],
+		probabilityVector: number[],
 		randomFunc = Math.random
 	) {
 		this.stage = stage;
 		this.tileSet = tileSet;
+		this.probabilityVector = probabilityVector;
 		this.randomFunc = randomFunc;
 	}
 
-	selectTiles(candidates: Tile[]) {
-		const possibleTiles = candidates.map((c) =>
-			this.tileSet.filter((t) => areCompatible(c, t))
+	selectTiles(candidates: Tile[]): Tile[] {
+		const possibleTileSets = candidates.map((c) =>
+			this.tileSet.map((t) => t.filter((s) => areCompatible(c, s)))
 		);
 
-		return possibleTiles.map((p) => {
-			const length = p.length;
+		return possibleTileSets.map((p) => {
+			let i = 0;
+
+			const randomTileSet = this.randomFunc();
+
+			while (randomTileSet > this.probabilityVector[i]) {
+				i++;
+			}
+
+			while (p[i].length === 0) {
+				i--;
+			}
+
+			const length = p[i].length;
 			const select = Math.floor(this.randomFunc() * length);
-			return p[select];
+			return p[i][select];
 		});
 	}
 
@@ -35,7 +50,6 @@ export class StageMapGenerator {
 			this.stage.getTileCandidate(c)
 		);
 		const selectionTiles = this.selectTiles(candidatePositionTiles);
-
 		this.stage.setPositions(candidatePositions, selectionTiles);
 		return this.stage.getNextCandidatePositions();
 	}
