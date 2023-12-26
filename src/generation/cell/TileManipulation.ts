@@ -1,6 +1,12 @@
 import { Tile } from "./Tile";
 
 const FULL_ROTATION = 4;
+const TILE_MATCH_MAP: Record<number, number> = {
+	1: 1,
+	2: 3,
+	3: 2,
+	4: 4,
+} as const;
 
 export function rotateClockwise(tile: Tile): Tile {
 	return {
@@ -37,10 +43,18 @@ export function areCompatible(referenceTile: Tile, tile: Tile): boolean {
 
 function overLapTile(referenceTile: Tile, tile: Tile): Tile {
 	return {
-		north: referenceTile.north === tile.north ? referenceTile.north : 0,
-		east: referenceTile.east === tile.east ? referenceTile.east : 0,
-		south: referenceTile.south === tile.south ? referenceTile.south : 0,
-		west: referenceTile.west === tile.west ? referenceTile.west : 0,
+		north:
+			TILE_MATCH_MAP[referenceTile.north] === tile.north
+				? referenceTile.north
+				: 0,
+		east:
+			TILE_MATCH_MAP[referenceTile.east] === tile.east ? referenceTile.east : 0,
+		south:
+			TILE_MATCH_MAP[referenceTile.south] === tile.south
+				? referenceTile.south
+				: 0,
+		west:
+			TILE_MATCH_MAP[referenceTile.west] === tile.west ? referenceTile.west : 0,
 	};
 }
 

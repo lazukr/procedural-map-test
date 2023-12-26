@@ -9,6 +9,14 @@ interface CellProps {
 	cell: Tile | null;
 }
 
+interface PathDefinition {
+	width: number;
+	height: number;
+	x: number;
+	y: number;
+	color: string;
+}
+
 const corridorWidth = 0.5;
 const wallWidth = 0.25;
 
@@ -18,9 +26,9 @@ export const Cell = ({ x, y, size, cell }: CellProps) => {
 	}
 
 	const northPath = getPath(cell.north);
-	const eastPath = getPath(cell.east);
-	const southPath = getPath(cell.south);
-	const westPath = getPath(cell.west);
+	const eastPath = eastify(getPath(cell.east));
+	const southPath = southify(getPath(cell.south));
+	const westPath = westify(getPath(cell.west));
 
 	return (
 		<Group
@@ -33,6 +41,7 @@ export const Cell = ({ x, y, size, cell }: CellProps) => {
 				x={0}
 				y={0}
 				fill={"black"}
+				stroke={"green"}
 			/>
 			{hasAtLeastOneOpening(cell) && (
 				<Rect
@@ -43,57 +52,119 @@ export const Cell = ({ x, y, size, cell }: CellProps) => {
 					fill={"white"}
 				/>
 			)}
+
 			{cell.north > 0 && (
 				<Rect
 					width={size * northPath.width}
 					height={size * northPath.height}
-					x={size * wallWidth}
-					y={0}
-					fill={"white"}
+					x={size * northPath.x}
+					y={size * northPath.y}
+					fill={northPath.color}
 				/>
 			)}
 			{cell.east > 0 && (
 				<Rect
-					width={size * eastPath.height}
-					height={size * eastPath.width}
-					x={size - size * wallWidth}
-					y={size * wallWidth}
-					fill={"white"}
+					width={size * eastPath.width}
+					height={size * eastPath.height}
+					x={size * eastPath.x}
+					y={size * eastPath.y}
+					fill={eastPath.color}
 				/>
 			)}
 			{cell.west > 0 && (
 				<Rect
-					width={size * westPath.height}
-					height={size * westPath.width}
-					x={0}
-					y={size * wallWidth}
-					fill={"white"}
+					width={size * westPath.width}
+					height={size * westPath.height}
+					x={size * westPath.x}
+					y={size * westPath.y}
+					fill={westPath.color}
 				/>
 			)}
 			{cell.south > 0 && (
 				<Rect
 					width={size * southPath.width}
 					height={size * southPath.height}
-					x={size * wallWidth}
-					y={size - size * wallWidth}
-					fill={"white"}
+					x={size * southPath.x}
+					y={size * southPath.y}
+					fill={southPath.color}
 				/>
 			)}
 		</Group>
 	);
 };
 
-function getPath(path: number) {
+function eastify(path: PathDefinition): PathDefinition {
+	return {
+		width: path.height,
+		height: path.width,
+		x: 1 - wallWidth,
+		y: path.x,
+		color: path.color,
+	};
+}
+
+function southify(path: PathDefinition): PathDefinition {
+	return {
+		width: path.width,
+		height: path.height,
+		x: 1 - path.x - path.width,
+		y: 1 - wallWidth,
+		color: path.color,
+	};
+}
+
+function westify(path: PathDefinition): PathDefinition {
+	return {
+		width: path.height,
+		height: path.width,
+		x: 0,
+		y: 1 - path.x - path.width,
+		color: path.color,
+	};
+}
+
+function getPath(path: number): PathDefinition {
 	switch (path) {
 		case 1:
 			return {
 				width: corridorWidth,
 				height: wallWidth,
+				x: wallWidth,
+				y: 0,
+				color: "white",
 			};
+		case 2:
+			return {
+				width: corridorWidth + wallWidth,
+				height: wallWidth,
+				x: 0,
+				y: 0,
+				color: "white",
+			};
+		case 3:
+			return {
+				width: corridorWidth + wallWidth,
+				height: wallWidth,
+				x: wallWidth,
+				y: 0,
+				color: "white",
+			};
+		case 4:
+			return {
+				width: 1,
+				height: wallWidth,
+				x: 0,
+				y: 0,
+				color: "white",
+			};
+
 		default:
 			return {
 				width: 0,
 				height: 0,
+				x: 0,
+				y: 0,
+				color: "white",
 			};
 	}
 }
