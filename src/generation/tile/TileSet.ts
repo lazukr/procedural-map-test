@@ -112,10 +112,20 @@ export class TileSet implements TileSetType {
 		});
 	}
 
-	getMinimumConnectablePaths(): Tile[] {
+	getTerminatingConnectablePaths(): Tile[] {
 		if (this.OnePath.length > 0) {
 			return this.OnePath;
 		} else if (this.TwoPaths.length > 0) {
+			return this.TwoPaths;
+		} else if (this.ThreePaths.length > 0) {
+			return this.ThreePaths;
+		} else {
+			return this.AllPaths;
+		}
+	}
+
+	getStableConnectablePaths(): Tile[] {
+		if (this.TwoPaths.length > 0) {
 			return this.TwoPaths;
 		} else if (this.ThreePaths.length > 0) {
 			return this.ThreePaths;
@@ -141,7 +151,10 @@ export class TileSet implements TileSetType {
 export const TILE_SET: TileSetProps = {
 	entranceTiles: TileManipulation.generateAllUniqueRotations(ENTRANCE_TILE),
 	singlePathTiles: TileManipulation.generateAllUniqueRotations(ONE_WAY_TILE),
-	twoPathTiles: TileManipulation.generateAllUniqueRotations(CORNER_TILE),
+	twoPathTiles: [
+		...TileManipulation.generateAllUniqueRotations(CORNER_TILE),
+		...TileManipulation.generateAllUniqueRotations(LINE_TILE),
+	],
 	threePathTiles: TileManipulation.generateAllUniqueRotations(T_SHAPE_TILE),
 	allPathTiles: TileManipulation.generateAllUniqueRotations(CROSS_TILE),
 };
