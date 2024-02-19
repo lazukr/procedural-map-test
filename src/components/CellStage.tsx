@@ -1,27 +1,27 @@
 import { Layer, Rect, Stage } from "react-konva";
+import { Tile } from "../generation/tile/Tile";
 import { Cell } from "./Cell";
-import { StageMap } from "../generation/stage/StageMap";
-import { Tile } from "../generation/cell/Tile";
+import { Room } from "../generation/room/Room";
 
-interface GenerationProps {
+interface CellStageProps {
+	room: Room;
 	gridSize: number;
-	stage: StageMap;
 }
 
-export const Generation = ({ stage, gridSize }: GenerationProps) => {
-	const realWidth = stage.width * gridSize;
-	const realHeight = stage.height * gridSize;
-	const currentMap = stage.map;
+export const CellStage = ({ room, gridSize }: CellStageProps) => {
+	const realWidth = room.width * gridSize;
+	const realHeight = room.height * gridSize;
+	const map = room.grid;
 	const flatMap = [];
 
-	for (let i = 0; i < stage.height; ++i) {
-		for (let j = 0; j < stage.width; ++j) {
+	for (let i = 0; i < room.height; ++i) {
+		for (let j = 0; j < room.width; ++j) {
 			flatMap.push(
 				<Cell
 					key={`${i},${j}`}
 					x={j * gridSize}
 					y={i * gridSize}
-					cell={currentMap[i][j] as Tile}
+					tile={map[i][j] as Tile}
 					size={gridSize}
 				/>
 			);
