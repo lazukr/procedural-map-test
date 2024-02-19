@@ -1,54 +1,31 @@
 import "./App.css";
-import { Generation } from "./components/Generation";
-import { CROSS_TILE, TILE_SET } from "./generation/cell/TileSet";
-import {
-	makeFibonacciProbabilityVector,
-	probabilityManipulationVector,
-} from "./generation/stage/ProbabilityVector";
-import { StageMap } from "./generation/stage/StageMap";
-import { StageMapGenerator } from "./generation/stage/StageMapGenerator";
+import { CellStage } from "./components/CellStage";
+import { Position } from "./generation/room/Position";
+import { RoomGenerator } from "./generation/room/RoomGenerator";
+import { RoomGrid } from "./generation/room/RoomGrid";
+import { TileSelector } from "./generation/room/TileSelector";
+import { ENTRANCE_TILE, TILE_SET, TileSet } from "./generation/tile/TileSet";
 
 function App() {
-	const width = 20;
-	const height = 20;
-	const stage = new StageMap(width, height);
+	const tileSet = new TileSet(TILE_SET);
+	const tileSelector = new TileSelector(tileSet, 0.5);
+	const roomGrid = new RoomGrid([
+		{
+			tile: ENTRANCE_TILE,
+			position: new Position(0, 0),
+		},
+	]);
 
-	/*
-	verify shapes
+	const roomGenerator = new RoomGenerator(roomGrid, tileSelector, -1);
 
-	const pos = [];
-	const tiles = [];
-	for (let i = 0; i < TILE_SET.length; ++i) {
-		for (let j = 0; j < TILE_SET[i].length; ++j) {
-			pos.push({ x: j, y: i });
-			tiles.push(TILE_SET[i][j]);
-		}
-	}
-
-	stage.setPositions(pos, tiles);
-	*/
-
-	stage.setPositions([{ x: 4, y: 0 }], [CROSS_TILE]);
-	const probVector = makeFibonacciProbabilityVector(TILE_SET.length);
-
-	const maniVector = probabilityManipulationVector(probVector.length, 155);
-	const generator = new StageMapGenerator(
-		stage,
-		TILE_SET,
-		probVector,
-		maniVector
-	);
-	generator.generate();
-
+	const room = roomGenerator.generate();
 	const gridSize = 60;
 
 	return (
-		<>
-			<Generation
-				gridSize={gridSize}
-				stage={stage}
-			/>
-		</>
+		<CellStage
+			room={room}
+			gridSize={gridSize}
+		/>
 	);
 }
 
