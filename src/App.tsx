@@ -8,7 +8,7 @@ import { ENTRANCE_TILE, TILE_SET, TileSet } from "./generation/tile/TileSet";
 
 function App() {
 	const tileSet = new TileSet(TILE_SET);
-	const tileSelector = new TileSelector(tileSet, 0.5);
+	const tileSelector = new TileSelector(tileSet, 0.2, 0.6);
 	const roomGrid = new RoomGrid([
 		{
 			tile: ENTRANCE_TILE,
@@ -16,7 +16,7 @@ function App() {
 		},
 	]);
 
-	const roomGenerator = new RoomGenerator(roomGrid, tileSelector, -1);
+	const roomGenerator = new RoomGenerator(roomGrid, tileSelector, 100);
 
 	const room = roomGenerator.generate();
 	const gridSize = 60;

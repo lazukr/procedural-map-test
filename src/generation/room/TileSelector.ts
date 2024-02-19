@@ -3,27 +3,45 @@ import { TileSet } from "../tile/TileSet";
 
 export class TileSelector {
 	private tileSet: TileSet;
-	private growthThreshold: number;
+	private terminationThreshold: number;
+	private stableThreshold: number;
 
-	constructor(tileSet: TileSet, growthThreshold: number) {
+	constructor(
+		tileSet: TileSet,
+		terminationThreshold: number,
+		stableThreshold: number
+	) {
 		this.tileSet = tileSet;
 
-		if (growthThreshold >= 1 || growthThreshold <= 0) {
+		if (terminationThreshold >= 1 || terminationThreshold <= 0) {
 			throw new RangeError(
-				"Grow threshold should be between 0 and 1 exclusive."
+				"Termination threshold should be between 0 and 1 exclusive."
 			);
 		}
 
-		this.growthThreshold = growthThreshold;
+		if (stableThreshold >= 1 || stableThreshold <= 0) {
+			throw new RangeError(
+				"Stable threshold should be between 0 and 1 exclusive."
+			);
+		}
+
+		this.terminationThreshold = terminationThreshold;
+		this.stableThreshold = stableThreshold;
 	}
 
 	selectConstraint(constraint: Tile): Tile {
 		const rand = Math.random();
 		const tileSubSet = this.tileSet.getSubset(constraint);
-		if (rand < this.growthThreshold) {
-			const tiles = tileSubSet.getMinimumConnectablePaths();
+		if (rand < this.terminationThreshold) {
+			const tiles = tileSubSet.getTerminatingConnectablePaths();
 			return tiles[Math.floor(Math.random() * tiles.length)];
 		}
+
+		if (rand < this.stableThreshold) {
+			const tiles = tileSubSet.getStableConnectablePaths();
+			return tiles[Math.floor(Math.random() * tiles.length)];
+		}
+
 		const tiles = tileSubSet.AllPaths;
 
 		if (tiles.length === 0) {
