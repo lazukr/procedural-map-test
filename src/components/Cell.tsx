@@ -7,6 +7,7 @@ interface CellProps {
 	y: number;
 	size: number;
 	tile: Tile;
+	borders: boolean;
 }
 
 interface EdgeProps {
@@ -17,7 +18,7 @@ interface EdgeProps {
 const corridorWidth = 0.5;
 const wallWidth = 0.25;
 
-export const Cell = ({ x, y, size, tile }: CellProps) => {
+export const Cell = ({ x, y, size, tile, borders }: CellProps) => {
 	if (Tile.isUndetermined(tile)) {
 		return <></>;
 	}
@@ -50,13 +51,15 @@ export const Cell = ({ x, y, size, tile }: CellProps) => {
 				size={size}
 				edge={tile.West}
 			/>
-			<Rect
-				width={size}
-				height={size}
-				x={0}
-				y={0}
-				stroke={"green"}
-			/>
+			{borders && (
+				<Rect
+					width={size}
+					height={size}
+					x={0}
+					y={0}
+					stroke={"green"}
+				/>
+			)}
 		</Group>
 	);
 };
