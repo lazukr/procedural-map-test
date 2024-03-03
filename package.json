@@ -14,13 +14,16 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "konva": "^9.2.3",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.1",
     "react-dom": "^18.2.0",
     "react-konva": "^18.2.10"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",
+    "@types/react-bootstrap": "^0.32.35",
     "@types/react-dom": "^18.2.15",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",

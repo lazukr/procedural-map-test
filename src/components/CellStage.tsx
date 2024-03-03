@@ -6,9 +6,10 @@ import { Room } from "../generation/room/Room";
 interface CellStageProps {
 	room: Room;
 	gridSize: number;
+	borders: boolean;
 }
 
-export const CellStage = ({ room, gridSize }: CellStageProps) => {
+export const CellStage = ({ room, gridSize, borders }: CellStageProps) => {
 	const realWidth = room.width * gridSize;
 	const realHeight = room.height * gridSize;
 	const map = room.grid;
@@ -23,6 +24,7 @@ export const CellStage = ({ room, gridSize }: CellStageProps) => {
 					y={i * gridSize}
 					tile={map[i][j] as Tile}
 					size={gridSize}
+					borders={borders}
 				/>
 			);
 		}
@@ -30,6 +32,7 @@ export const CellStage = ({ room, gridSize }: CellStageProps) => {
 
 	return (
 		<Stage
+			className="stage-container"
 			width={realWidth}
 			height={realHeight}
 		>
