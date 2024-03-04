@@ -71,6 +71,7 @@ export class TileSet implements TileSetType {
 	readonly ThreePaths: Tile[];
 	readonly AllPaths: Tile[];
 	readonly NonEntrancePaths: Tile[];
+	private subsets: Record<string, TileSet>;
 
 	constructor({
 		entranceTiles,
@@ -90,26 +91,33 @@ export class TileSet implements TileSetType {
 			...this[PathTile.ThreePaths],
 			...this[PathTile.AllPaths],
 		];
+
+		this.subsets = {};
 	}
 
 	getSubset(criteria: Tile): TileSet {
-		return new TileSet({
-			entranceTiles: [...this.Entrance].filter((t) =>
-				TileManipulation.canFill(t, criteria)
-			),
-			singlePathTiles: [...this.OnePath].filter((t) =>
-				TileManipulation.canFill(t, criteria)
-			),
-			twoPathTiles: [...this.TwoPaths].filter((t) =>
-				TileManipulation.canFill(t, criteria)
-			),
-			threePathTiles: [...this.ThreePaths].filter((t) =>
-				TileManipulation.canFill(t, criteria)
-			),
-			allPathTiles: [...this.AllPaths].filter((t) =>
-				TileManipulation.canFill(t, criteria)
-			),
-		});
+		const serializedCriteria = Tile.serialize(criteria);
+		if (!this.subsets[serializedCriteria]) {
+			const subset = new TileSet({
+				entranceTiles: [...this.Entrance].filter((t) =>
+					TileManipulation.canFill(t, criteria)
+				),
+				singlePathTiles: [...this.OnePath].filter((t) =>
+					TileManipulation.canFill(t, criteria)
+				),
+				twoPathTiles: [...this.TwoPaths].filter((t) =>
+					TileManipulation.canFill(t, criteria)
+				),
+				threePathTiles: [...this.ThreePaths].filter((t) =>
+					TileManipulation.canFill(t, criteria)
+				),
+				allPathTiles: [...this.AllPaths].filter((t) =>
+					TileManipulation.canFill(t, criteria)
+				),
+			});
+			this.subsets[serializedCriteria] = subset;
+		}
+		return this.subsets[serializedCriteria];
 	}
 
 	getTerminatingConnectablePaths(): Tile[] {
