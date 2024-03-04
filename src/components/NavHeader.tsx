@@ -3,6 +3,7 @@ import { NumberInput } from "./NumberInput";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
+import { Github } from "react-bootstrap-icons";
 
 interface NavHeaderProps {
 	terminationProbability: number;
@@ -84,16 +85,22 @@ export const NavHeader = ({
 					value={generationLimit}
 					setValue={setGenerationLimit}
 				/>
+				<InputGroup.Text>{"Borders"}</InputGroup.Text>
+				<Form.Check
+					type="switch"
+					checked={haveBorders}
+					onChange={setHaveBorders}
+				/>
+
+				<Button onClick={generate}>Generate</Button>
 			</InputGroup>
 
-			<InputGroup.Text>{"Borders"}</InputGroup.Text>
-			<Form.Check
-				type="switch"
-				checked={haveBorders}
-				onChange={setHaveBorders}
-			/>
-
-			<Button onClick={generate}>Generate</Button>
+			<Button
+				target="_blank"
+				href={"https://github.com/lazukr/procedural-map-test"}
+			>
+				<Github />
+			</Button>
 		</Navbar>
 	);
 };
