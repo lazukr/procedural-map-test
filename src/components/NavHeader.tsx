@@ -48,6 +48,7 @@ export const NavHeader = ({
 					inputMax={0.5}
 					value={terminationProbability}
 					setValue={setTerminationProbability}
+					tooltip="Probability the cell will terminate its path."
 				/>
 				<NumberInput
 					label={"Stable"}
@@ -56,6 +57,7 @@ export const NavHeader = ({
 					inputMax={0.5}
 					value={stableProbability}
 					setValue={setStableProbability}
+					tooltip="Probability the cell will propagate the path."
 				/>
 				<NumberInput
 					label={"Growth"}
@@ -65,6 +67,7 @@ export const NavHeader = ({
 					value={growthPrbability}
 					setValue={() => {}}
 					disabled={true}
+					tooltip="Probability the cell will grow in paths."
 				/>
 			</InputGroup>
 			<Navbar.Brand>Others:</Navbar.Brand>
@@ -76,6 +79,7 @@ export const NavHeader = ({
 					inputMax={100}
 					value={gridSize}
 					setValue={setGridSize}
+					tooltip="The size of the grid."
 				/>
 				<NumberInput
 					label={"Generation Limit"}
@@ -84,6 +88,7 @@ export const NavHeader = ({
 					inputMax={1000}
 					value={generationLimit}
 					setValue={setGenerationLimit}
+					tooltip="The maximum number of iterations."
 				/>
 				<InputGroup.Text>{"Borders"}</InputGroup.Text>
 				<Form.Check

@@ -1,5 +1,3 @@
-// negative numbers for
-
 export enum Edge {
 	Undetermined = "Undetermined",
 	Wall = "Wall",
