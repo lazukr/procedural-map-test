@@ -1,4 +1,6 @@
-import { InputGroup } from "react-bootstrap";
+import { useMemo } from "react";
+import { InputGroup, OverlayTrigger } from "react-bootstrap";
+import Tooltip from "react-bootstrap/Tooltip";
 
 interface NumberInputProps {
 	label: string;
@@ -7,6 +9,7 @@ interface NumberInputProps {
 	inputMax: number;
 	value: number;
 	setValue: (n: number) => void;
+	tooltip: string;
 	disabled?: boolean;
 }
 
@@ -17,11 +20,23 @@ export const NumberInput = ({
 	inputMax,
 	value,
 	setValue,
+	tooltip,
 	disabled = false,
 }: NumberInputProps) => {
+	const renderTooltip = useMemo(
+		() => <Tooltip id="button-tooltip">{tooltip}</Tooltip>,
+		[tooltip]
+	);
+
 	return (
 		<>
-			<InputGroup.Text>{label}</InputGroup.Text>
+			<OverlayTrigger
+				overlay={renderTooltip}
+				placement="right"
+				delay={{ show: 250, hide: 400 }}
+			>
+				<InputGroup.Text>{label}</InputGroup.Text>
+			</OverlayTrigger>
 			<input
 				type="number"
 				min={inputMin}
